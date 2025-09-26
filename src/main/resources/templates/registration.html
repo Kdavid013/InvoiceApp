@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--stílus hozzáadás-->
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Registration</title>
+</head>
+<body>
+<div id="header"></div>
+<section class="login_form">
+    <div class="topbar">
+        <h2>Registration</h2>
+    </div>
+    <!--registration endpoint rákötése a formra-->
+    <form th:action="@{/registration}" method="post" id="form">
+        <div class="inputbox">
+            <input type="text" name="name" />
+            <label>Name</label>
+        </div>
+        <div class="inputbox">
+            <input type="text" name="username" />
+            <label>Username</label>
+        </div>
+        <div class="inputbox">
+            <input type="password" name="password" />
+            <label>Password</label>
+        </div>
+        <div class="inputbox">
+            <input type="password" name="passwordcon" />
+            <label>Confirm password</label>
+        </div>
+        <div class="radiobox">
+            <input type="radio" name="role" value="User" />
+            <label>User</label>
+            <input type="radio" name="role" value="Accountant" />
+            <label>Accountant</label>
+        </div>
+        <button type="submit" id="submitbutton" th:href="@{login}">Register</button>
+        <!--link a login felületre-->
+        <p id="registration"><a th:href="@{/login}">Log in</a></p>
+    </form>
+</section>
+</body>
+</html>
+<script>
+    const submitButton = document.getElementById("submitbutton");
+ submitButton.addEventListener('click', (e) => {
+     e.preventDefault(); 
+
+     //adatok lekérése a formból
+     const name = document.getElementsByName('name')[0].value;
+     const username = document.getElementsByName('username')[0].value;
+     const password = document.getElementsByName('password')[0].value;
+     const confirmPassword = document.getElementsByName('passwordcon')[0].value;
+     const selectedRole = document.querySelector('input[name="role"]:checked')?.value;
+
+     //adatok összegyűjtése egy objektumba
+     const data = {
+         name,
+         username,
+         password,
+         role: selectedRole
+     };
+
+     //regisztráció validáció
+     if (name === "" || username === "" || password === "" || confirmPassword === "" || !selectedRole) {
+         alert('Please fill all the fields!');
+         return;
+     } else if (password.length < 8) {
+         alert('Password must be at least 8 characters long!');
+         return;
+     } else
+     if (password === confirmPassword) {
+         fetch('/registration', {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify(data)
+         })
+         .then(response => {
+             if (response.status === 200) {
+                 alert('successful');
+             } else {
+                 alert('Registration failed');
+             }
+         });
+     } else {
+         alert('Passwords do not match!');
+     }
+ })
+</script>

@@ -5,10 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-
+// annotáció hogy a program tudja ez egy adatbázisbeli tábla
 @Entity
 public class Users {
 
+    //primary key, automatikusan hozzárendel egy értéket
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
