@@ -1,4 +1,8 @@
 package com.example.invoice_app.dto;
 
-public record UserResponseDTO(String name, String role) {
+import com.example.invoice_app.model.Role;
+
+import java.util.Set;
+
+public record UserResponseDTO(String name, Set<Role> role) {
 }

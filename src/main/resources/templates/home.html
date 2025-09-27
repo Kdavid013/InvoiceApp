@@ -1,31 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" href="/css/homestyle.css">
 </head>
 <body>
-<h1>Home</h1>
-</body>
-</html><!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="htmlk\style.css">
-    <title>Login</title>
-</head>
-<body>
-<section class="sidebar">
-    <div class="topbar">
-        <h2><h2>
-    </div>
-    <div class="menu">
-        <a th:href="@{/home}">Home</a>
-        <a th:href="@{/clients}">Administration</a>
-        <a th:href="@{/invoices}">Invoices</a>
-        <a th:href="@{/logout}">Log out</a>
-    </div>  
-</section>
+
+
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="user-info">
+            <div class="avatar"></div>
+            <div class="details">
+                <h2>Teszt Elek</h2>
+                <p>Administrator</p>
+     <!--       <small>Utoljára belépett: 2025.09.25</small>-->
+            </div>
+        </div>
+        <nav class="menu">
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/administration}">Administration</a>
+            <a sec:authorize="hasAnyRole('ACCOUNTANT','ADMIN')" th:href="@{/invoice/create}">Create Invoice</a>
+            <a th:href="@{/invoices}">Invoices</a>
+        </nav>
+        <div class="logout">
+            <a href="#">Log out</a>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="content">
+        <h1>Welcome to the Invoice App</h1>
+    </main>
+</div>
 
 </body>
 </html>

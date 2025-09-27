@@ -2,9 +2,12 @@ package com.example.invoice_app.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 // annotáció hogy a program tudja ez egy adatbázisbeli tábla
 @Entity
-@Table(name = "\"Users\"")
+@Table(name = "USERS")
 public class User {
 
     //primary key, automatikusan hozzárendel egy értéket
@@ -14,7 +17,14 @@ public class User {
     private String name;
     private String username;
     private String password;
-    private String role;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public String getName() {
         return name;
@@ -48,11 +58,16 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
+
+    public void addRole(Role role){
+        this.roles.add(role);
+    }
+
 }

@@ -11,15 +11,23 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    DataSource dataSource;
 
     //jelszó titkosítás
     @Bean
@@ -53,11 +61,26 @@ public class SecurityConfig {
                 // engedélyezük a hozzáférést a regisztrációhoz és a h2 konzolhoz
                 // engedélyezük a css és js használatát, hogy a html-ek formázva legyenek
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**", "/invoices/**","/invoicecreation").permitAll()
+                        .requestMatchers("/invoices/**").hasAnyRole("USER", "ACCOUNTANT", "ADMIN")
+                        .requestMatchers("/invoice/create").hasAnyRole("ACCOUNTANT", "ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // basic belépés login form nélkül
-                .httpBasic(Customizer.withDefaults())
+//                .httpBasic(Customizer.withDefaults())
                 .build();
     }
+
+//    @Bean public UserDetailsService userDetailsService(){
+//        UserDetails user1 = User.withUserDetails("user1")
+//                .password("{noop}password1")
+//                .roles("USER")
+//                .build();
+//
+//
+//        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+//        return new InMemoryUserDetailsManager(user1,admin1,accountant1);
+//
+//    }
 }

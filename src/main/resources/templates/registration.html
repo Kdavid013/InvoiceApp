@@ -31,9 +31,9 @@
             <label>Confirm password</label>
         </div>
         <div class="radiobox">
-            <input type="radio" name="role" value="User" />
+            <input type="radio" name="role" value="USER" />
             <label>User</label>
-            <input type="radio" name="role" value="Accountant" />
+            <input type="radio" name="role" value="ACCOUNTANT" />
             <label>Accountant</label>
         </div>
         <button type="submit" id="submitbutton" th:href="@{login}">Register</button>
@@ -60,7 +60,7 @@
          name,
          username,
          password,
-         role: selectedRole
+         roles: [selectedRole]
      };
 
      //regisztráció validáció

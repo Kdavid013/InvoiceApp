@@ -24,9 +24,9 @@ public class UserController {
 
     // végpont bekötve a /registration-re, json típusú fájlt vár
     @PostMapping(value = "/registration")
-    public String createUser(@RequestBody CreateUserRequestDTO user){
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody CreateUserRequestDTO user){
         UserResponseDTO response = userService.createUser(user);
-        return "redirect/login?success";
+        return ResponseEntity.ok(response);
     }
 
 

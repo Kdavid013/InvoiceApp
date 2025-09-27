@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+}
+
+#header{
+    width: 100%;
+    height: 50px;
+    background-color: #29E42C;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.user-info {
+    background: #22e322; /* zöld fejléc */
+    color: white;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 8px;
+}
+
+.details h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.details p {
+    margin: 2px 0;
+    font-size: 14px;
+}
+
+.details small {
+    font-size: 12px;
+    color: #eee;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    align-items: top    ;
+}
+
+.menu a {
+    padding: 10px 0;
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.menu a:hover {
+    background: #f5f5f5;
+}
+
+.logout {
+    padding: 16px;
+    border-top: 1px solid #eee;
+    position: absolute;
+    bottom: 0;
+}
+
+.logout a {
+    text-decoration: none;
+    color: #333;
+}
+
+/* Main content */
+.content {
+    flex-grow: 1;
+    padding: 24px;
+}
