@@ -80,8 +80,10 @@
              body: JSON.stringify(data)
          })
          .then(response => {
+         //ha sikeres a regisztráció válasz üzenet
              if (response.status === 200) {
-                 alert('successful');
+                 alert('Successful registration!');
+                 window.location.href = "/login";
              } else {
                  alert('Registration failed');
              }

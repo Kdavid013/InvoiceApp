@@ -29,10 +29,10 @@ public class ContentController {
         return "administration"; // login.html
     }
 
-    @GetMapping("/invoice")
-    public String showInvoicesPage() {
-        return "invoice"; // login.html
-    }
+//    @GetMapping("/invoice")
+//    public String showInvoicesPage() {
+//        return "invoice"; // login.html
+//    }
 
 
 //    @PostMapping("/login")

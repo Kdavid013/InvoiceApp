@@ -20,31 +20,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserService userService;
-
-//    public SecurityConfig(UserService userService) {
-//        this.userService = userService;
-//    }
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return userService;
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
 
     //jelszó titkosítás
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(UserDetailsService  uds, PasswordEncoder encoder){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(uds);
+        provider.setPasswordEncoder(encoder);
+        return provider;
+    }
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -62,7 +53,7 @@ public class SecurityConfig {
                 // engedélyezük a hozzáférést a regisztrációhoz és a h2 konzolhoz
                 // engedélyezük a css és js használatát, hogy a html-ek formázva legyenek
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**", "/invoices/**","/invoicecreation").permitAll()
                         .anyRequest().authenticated()
                 )
                 // basic belépés login form nélkül

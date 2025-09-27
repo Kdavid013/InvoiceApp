@@ -10,7 +10,7 @@ public class Invoice {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private int id;
+    private long id;
     private String buyername;
     private String createdate;
     private String duedate;
