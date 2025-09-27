@@ -7,6 +7,6 @@ import java.util.Optional;
 
 // interface hogy az adatbázis és a service között
 @Repository
-public interface UserRepository extends JpaRepository<Users, Integer> {
-    Optional<Users> findByUsername(String username);
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByUsername(String username);
 }
