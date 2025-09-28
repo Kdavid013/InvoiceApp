@@ -3,32 +3,37 @@ package com.example.invoice_app.controller;
 import com.example.invoice_app.Sevice.InvoiceService;
 import com.example.invoice_app.dto.InvoiceRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
 
-    @PostMapping(value = "/invoicecreation")
-    public ResponseEntity<InvoiceRequestDTO> createInvoice(@RequestBody InvoiceRequestDTO invoice){
-        InvoiceRequestDTO response = invoiceService.createInvoice(invoice);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    @GetMapping("/invoices")
+    public String showInvoicesPage(Model model) {
+        List<InvoiceRequestDTO> invoices = invoiceService.listAllInvoices();
+        model.addAttribute("invoices", invoices);
+        return "invoices"; // login.html
     }
 
-    @GetMapping(value = "/invoices")
-    public List<InvoiceRequestDTO> getInvoices(){
-        return invoiceService.listAllInvoices();
+    @GetMapping("/invoices/{id}")
+    public String showInvoiceDetailPage(@PathVariable Long id, Model model) {
+        InvoiceRequestDTO invoice = invoiceService.getInvoiceById(id);
+        model.addAttribute("invoice", invoice);
+        return "invoicefilled"; // login.html
     }
 
-    @GetMapping(value = "/invoices/{id}")
-    public InvoiceRequestDTO getInvoiceById(@PathVariable long id){
-        return invoiceService.getInvoiceById(id);
+    @GetMapping("/invoice/create")
+    public String showInvoiceCreationPage(Model model) {
+        model.addAttribute("invoice", new InvoiceRequestDTO(null, "", "", "", "", "", 0));
+        return "invoicecreation";
     }
 
 }

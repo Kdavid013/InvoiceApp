@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="/css/invoiceStyle.css">
+    <title>Invoices</title>
 </head>
 <body>
-
+    <div id="topbar">
+        <a class="back-link" th:href="@{/home}">Back</a>
+        <h1>Invoices</h1>
+    </div>
+    <div class="page-content">
+        <table class="table">
+            <thead>
+                <tr class="header">
+                    <th>ID</th>
+                    <th>Buyer</th>
+                    <th>Date of creation</th>
+                    <th>Due date</th>
+                    <th>Product</th>
+                    <th>Comment</th>
+                    <th>Price (ft)</th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- végig iterálunk az invoice-okon amit a backendtől kapunk és kitöltjük az adatokkal a mezőket -->
+            <!-- az egész sor kattintható legyen -->
+                <tr th:each="invoice : ${invoices}"
+                    th:class="'clickable-row'"
+                    th:onclick="'window.location.href=\'/invoices/' + ${invoice.id} + '\';'">
+                    <td th:text="${invoice.id}"></td>
+                    <td th:text="${invoice.buyer}"></td>
+                    <td th:text="${invoice.createdate}"></td>
+                    <td th:text="${invoice.duedate}"></td>
+                    <td th:text="${invoice.product}"></td>
+                    <td th:text="${invoice.comment}"></td>
+                    <td th:text="${invoice.price}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/invoice/create}">Create New Invoice</a>
+    </div>
 </body>
 </html>

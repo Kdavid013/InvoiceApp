@@ -66,5 +66,7 @@ public class Invoice {
         this.price = price;
     }
 
-
+    public long getId() {
+        return id;
+    }
 }

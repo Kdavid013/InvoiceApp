@@ -22,7 +22,7 @@ public class InvoiceService {
         invoice.setBuyername(request.buyer());
         invoice.setCreatedate(request.createdate());
         invoice.setDuedate(request.duedate());
-        invoice.setProduct(request.prodcut());
+        invoice.setProduct(request.product());
         invoice.setComment(request.comment());
         invoice.setPrice(request.price());
 
@@ -33,6 +33,7 @@ public class InvoiceService {
     public List<InvoiceRequestDTO> listAllInvoices( ){
         return invoiceRepository.findAll().stream()
                 .map(invoice -> new InvoiceRequestDTO(
+                        invoice.getId(),
                         invoice.getBuyername(),
                         invoice.getCreatedate(),
                         invoice.getDuedate(),
@@ -50,6 +51,7 @@ public class InvoiceService {
 
     private InvoiceRequestDTO toResponse(Invoice invoice){
         return new InvoiceRequestDTO(
+                invoice.getId(),
                 invoice.getBuyername(),
                 invoice.getCreatedate(),
                 invoice.getDuedate(),

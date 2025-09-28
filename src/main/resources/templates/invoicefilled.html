@@ -11,29 +11,28 @@
         <div class="topbar">
                 <h2>New invoice</h2>
             </div>
-        <form th:action="@{/invoice/create}" method="post" id="form" th:object="${invoice}">
+        <form method="post" id="form" th:object="${invoice}" >
             
             <div class="inputbox">
-                <input type="text" name="buyer" th:field="*{buyer}" required/>
+                <input type="text" name="buyer" th:field="*{buyer}" readonly/>
                 <label>BuyerName</label>
             </div>
             <div class="inputbox">
-                <input type="date" name="createdate" th:field="*{createdate}" required/>
+                <input type="date" name="createdate" th:field="*{createdate}"  readonly/>
                 <label>Date of creation</label>
             </div>
             <div class="inputbox">
-                <input type="date" name="duedate" th:field="*{duedate}" required/>
+                <input type="date" name="duedate" th:field="*{duedate}" readonly/>
                 <label>Due date</label>
             </div>
             <div class="inputbox">
-                <input type="text" name="product" th:field="*{product}" required/>
+                <input type="text" name="product" th:field="*{product}" readonly/>
                 <label>Product</label>
             </div>
             <div class="inputbox">
-                <input type="text" name="price" th:field="*{price}" required/>
+                <input type="text" name="price" th:field="*{price}" readonly/>
                 <label>Price</label>
             </div>
-            <button type="submit" id="submitbutton">Create</button>
             <p class="registration"><a th:href="@{/invoices}">Back</a></p>
         </form>
     </section>

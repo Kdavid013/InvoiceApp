@@ -54,7 +54,9 @@ public class SecurityConfig {
 
                 // login felület elérhető mndenki számára, lecseréli a security alap belépési formját
                 .formLogin(httpForm -> {
-                    httpForm.loginPage("/login").permitAll();
+                    httpForm.loginPage("/login")
+                            .defaultSuccessUrl("/home", true)
+                            .permitAll();
                 })
 
                 // Engedélyezett / védett endpointok

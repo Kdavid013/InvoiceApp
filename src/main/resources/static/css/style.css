@@ -92,7 +92,15 @@ body{
 
 }
 
-#registration{
+.registration{
+    margin-top: 20px;
+    font-size: small;
+    text-align: center;
+    color: #29E42C;
+    margin-bottom: 20px;
+}
+
+.registration a:visited{
     margin-top: 20px;
     font-size: small;
     text-align: center;
