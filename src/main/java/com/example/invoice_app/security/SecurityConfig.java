@@ -69,6 +69,10 @@ public class SecurityConfig {
                         .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login")
+                        .permitAll()
+                )
                 // basic belépés login form nélkül
 //                .httpBasic(Customizer.withDefaults())
                 .build();

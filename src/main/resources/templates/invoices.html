@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/invoiceStyle.css">
@@ -39,7 +39,7 @@
                 </tr>
             </tbody>
         </table>
-        <a th:href="@{/invoice/create}">Create New Invoice</a>
+        <a sec:authorize="hasAnyRole('ACCOUNTANT','ADMIN')" th:href="@{/invoice/create}">Create New Invoice</a>
     </div>
 </body>
 </html>

@@ -12,7 +12,7 @@ public class User {
 
     //primary key, automatikusan hozzárendel egy értéket
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String username;
