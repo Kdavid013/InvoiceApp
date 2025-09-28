@@ -13,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -51,8 +53,7 @@ public class UserService implements UserDetailsService {
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
 
-
-        // veszi a roleokat amit kapunk a dto-bo majd egyesével megkersi az adatbázisban.
+        // veszi a roleokat amit kapunk a dto-bo majd egyesével megkeresi az adatbázisban.
         // A talált rekordot hozzárendeli a felhasználóhoz
         for(String roleName : request.roles()){
             Role role = roleRepository.findByName(roleName)
@@ -65,14 +66,40 @@ public class UserService implements UserDetailsService {
     }
 
     // felhasználó lekérése Id alapján
-    public UserResponseDTO getUserById(int id){
+    public UserResponseDTO getUserById(long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return toResponse(user);
     }
 
-    // dto mappelése User entity-vé
+    // User entity mappelése DTO-vé
     private UserResponseDTO toResponse(User user){
-        return new UserResponseDTO(user.getName(), user.getRoles());
+        Set<String> roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+        return new UserResponseDTO(user.getId(),user.getName(), user.getUsername(), roleNames);
+    }
+
+    // lekérjük az összes felhasználót
+    public List<UserResponseDTO> listAllUsers(){
+        return userRepository.findAll().stream()
+                // Az összes lekért felhasználóhoz hozzárendeli a toResponse metódust hogy át legyen alakítva DTO-vá
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteUserById(long id) {
+        userRepository.deleteById(id);
+    }
+
+    public void userSetRoles(long id, List<String> roleNames){
+        User user = userRepository.findById(id).orElseThrow();
+        Set<Role> newRoles = roleNames.stream()
+                .map(roleRepository::findByName)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+        user.setRoles(newRoles);
+        userRepository.save(user);
     }
 }

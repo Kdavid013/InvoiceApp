@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    // beinjektáljuk a userrpositoryt hogy az adatokat az adatbázisba tudjuk menteni
-    @Autowired
-    private UserRepository userRepository;
-
+    // létrehozzuk a userService-t hogy képesek legyünk az adatbázisba elmenteni a felhasználót
     @Autowired
     private UserService userService;
 

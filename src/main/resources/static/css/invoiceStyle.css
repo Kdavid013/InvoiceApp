@@ -96,3 +96,14 @@ a:hover {
     font-size: 1.5rem;
     color: #f8f8f8;
 }
+
+.edit-link{
+    font-size: larger;
+    justify-content: center;
+}
+
+.delete-link{
+    font-size: larger;
+    justify-content: center;
+    color: red;
+}

@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="/css/invoicestyle.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>User Administration</title>
+    <style>
+        tr.clickable-row { cursor: pointer; }
+        tr.clickable-row:hover { background-color: #e0ffe0; }
+    </style>
 </head>
+<!-- ...existing code... -->
 <body>
-
+<div id="topbar">
+    <a class="back-link" th:href="@{/Home}">Back</a>
+    <h1>Users</h1>
+</div>
+<div class="page-content">
+    <table class="table" border="0">
+        <thead>
+        <tr class="header">
+            <th>Name</th>
+            <th>User name</th>
+            <th>Roles</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.roles}"></td>
+            <td><a th:href="@{'/administration/edit/'+ ${user.id}}" class="edit-link"><i class="fa fa-pencil"></i></a> </td>
+            <td>
+                <form th:action="@{'/administration/delete/' + ${user.id}}" method="post" style="display:inline;">
+                    <button type="submit" class="delete-link" style="background:none;border:none;cursor:pointer;">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/user/create}">Create New User</a>
+</div>
 </body>
+<!-- ...existing code... -->
 </html>
