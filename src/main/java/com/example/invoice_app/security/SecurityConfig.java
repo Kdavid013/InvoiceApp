@@ -66,7 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/invoices/**").hasAnyRole("USER", "ACCOUNTANT", "ADMIN")
                         .requestMatchers("/invoice/create").hasAnyRole("ACCOUNTANT", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/registration", "/h2-console/**", "/css/**", "/js/**", "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

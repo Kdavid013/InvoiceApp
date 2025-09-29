@@ -5,6 +5,8 @@ import com.example.invoice_app.model.Invoice;
 import com.example.invoice_app.model.InvoiceRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +22,8 @@ public class InvoiceService {
     public InvoiceRequestDTO createInvoice(InvoiceRequestDTO request){
         Invoice invoice = new Invoice();
         invoice.setBuyername(request.buyer());
-        invoice.setCreatedate(request.createdate());
-        invoice.setDuedate(request.duedate());
+        invoice.setCreatedate(LocalDate.parse(request.createdate()));
+        invoice.setDuedate(LocalDate.parse(request.duedate()));
         invoice.setProduct(request.product());
         invoice.setComment(request.comment());
         invoice.setPrice(request.price());
@@ -32,15 +34,7 @@ public class InvoiceService {
 
     public List<InvoiceRequestDTO> listAllInvoices( ){
         return invoiceRepository.findAll().stream()
-                .map(invoice -> new InvoiceRequestDTO(
-                        invoice.getId(),
-                        invoice.getBuyername(),
-                        invoice.getCreatedate(),
-                        invoice.getDuedate(),
-                        invoice.getProduct(),
-                        invoice.getComment(),
-                        invoice.getPrice()
-                )).collect(Collectors.toList());
+                .map(this::toResponse).collect(Collectors.toList());
     }
 
     public InvoiceRequestDTO getInvoiceById(long id){
@@ -53,8 +47,8 @@ public class InvoiceService {
         return new InvoiceRequestDTO(
                 invoice.getId(),
                 invoice.getBuyername(),
-                invoice.getCreatedate(),
-                invoice.getDuedate(),
+                invoice.getCreatedate().toString(),
+                invoice.getDuedate().toString(),
                 invoice.getProduct(),
                 invoice.getComment(),
                 invoice.getPrice());

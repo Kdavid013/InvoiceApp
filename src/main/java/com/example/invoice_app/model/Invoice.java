@@ -4,6 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 public class Invoice {
@@ -11,11 +16,24 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
+
+    @NotBlank
     private String buyername;
-    private String createdate;
-    private String duedate;
+
+    @NotBlank
+    @DateTimeFormat
+    private LocalDate createdate;
+
+    @NotBlank
+    @DateTimeFormat
+    private LocalDate duedate;
+
+    @NotBlank
     private String product;
+
     private String comment;
+
+    @NotBlank
     private int price;
 
     public String getBuyername() {
@@ -26,19 +44,19 @@ public class Invoice {
         this.buyername = buyername;
     }
 
-    public String getCreatedate() {
+    public LocalDate getCreatedate() {
         return createdate;
     }
 
-    public void setCreatedate(String createdate) {
+    public void setCreatedate(LocalDate createdate) {
         this.createdate = createdate;
     }
 
-    public String getDuedate() {
+    public LocalDate getDuedate() {
         return duedate;
     }
 
-    public void setDuedate(String duedate) {
+    public void setDuedate(LocalDate duedate) {
         this.duedate = duedate;
     }
 

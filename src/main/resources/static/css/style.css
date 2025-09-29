@@ -89,7 +89,11 @@ body{
     font-size: medium;
     border-radius: 10px;
     cursor: pointer;
+}
 
+#submitbutton:disabled{
+    background-color: #121212;
+    cursor: not-allowed;
 }
 
 .registration{

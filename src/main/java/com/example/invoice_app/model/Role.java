@@ -1,6 +1,7 @@
 package com.example.invoice_app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name ="roles")
@@ -9,6 +10,8 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotBlank
     private String name;
     private String description;
 
