@@ -1,9 +1,11 @@
 package com.example.invoice_app.controller;
 
 import com.example.invoice_app.Sevice.InvoiceService;
+import com.example.invoice_app.Sevice.RoleService;
 import com.example.invoice_app.Sevice.UserService;
 import com.example.invoice_app.dto.CreateUserRequestDTO;
 import com.example.invoice_app.dto.InvoiceRequestDTO;
+import com.example.invoice_app.dto.RoleResponseDTO;
 import com.example.invoice_app.dto.UserResponseDTO;
 import com.example.invoice_app.model.Invoice;
 import com.example.invoice_app.model.User;
@@ -26,6 +28,9 @@ public class ContentController {
 
     @Autowired
     public UserService userService;
+
+    @Autowired
+    RoleService roleService;
 
     @GetMapping("/registration")
     public String showRegistrationPage(){
@@ -55,8 +60,13 @@ public class ContentController {
 
     @GetMapping("administration/edit/{id}")
     public String editUser(@PathVariable long id, Model model){
+
         UserResponseDTO user = userService.getUserById(id);
+        List<RoleResponseDTO> listRoles = roleService.listAllRoles();
+
         model.addAttribute("user", user);
+        model.addAttribute("listRoles", listRoles);
+
         return "registrationfilled";
     }
 

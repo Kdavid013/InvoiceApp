@@ -21,9 +21,16 @@ public class UserController {
 
     // végpont bekötve a /registration-re, json típusú fájlt vár
     @PostMapping(value = "/registration")
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody CreateUserRequestDTO user){
-        UserResponseDTO response = userService.createUser(user);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequestDTO user){
+        try{
+            UserResponseDTO response = userService.createUser(user);
+            return ResponseEntity.ok(response);
+        }
+        catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+
     }
 
 

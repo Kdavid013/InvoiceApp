@@ -2,15 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <!-- oldal kinézetének kezelése -->
     <link rel="stylesheet" href="/css/invoicestyle.css" >
+    <!-- az ikonok elérésének URL-je -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>User Administration</title>
-    <style>
-        tr.clickable-row { cursor: pointer; }
-        tr.clickable-row:hover { background-color: #e0ffe0; }
-    </style>
 </head>
-<!-- ...existing code... -->
 <body>
 <div id="topbar">
     <a class="back-link" th:href="@{/home}">Back</a>
@@ -23,17 +20,21 @@
             <th>Name</th>
             <th>User name</th>
             <th>Roles</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>Edit roles</th>
+            <th>Delete user</th>
         </tr>
         </thead>
         <tbody>
+        <!-- user DTO bind-olása hogy a táblázat elérje az adatokat -->
         <tr th:each="user : ${users}">
+
             <td th:text="${user.name}"></td>
             <td th:text="${user.username}"></td>
             <td th:text="${user.roles}"></td>
+            <!-- role kezelő oldal bekötése -->
             <td><a th:href="@{'/administration/edit/'+ ${user.id}}" class="edit-link"><i class="fa fa-pencil"></i></a> </td>
             <td>
+                <!-- felhasználó törlése -->
                 <form th:action="@{'/administration/delete/' + ${user.id}}" method="post" style="display:inline;">
                     <button type="submit" class="delete-link" style="background:none;border:none;cursor:pointer;">
                         <i class="fa fa-trash-o"></i>
@@ -43,8 +44,6 @@
         </tr>
         </tbody>
     </table>
-    <a th:href="@{/user/create}">Create New User</a>
 </div>
 </body>
-<!-- ...existing code... -->
 </html>

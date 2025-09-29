@@ -1,6 +1,7 @@
 package com.example.invoice_app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,8 +15,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String name;
+
+    @Column(unique = true)
     private String username;
+
+    @Size(min = 8)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -24,6 +30,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Size(min = 1)
     private Set<Role> roles = new HashSet<>();
 
     public String getName() {

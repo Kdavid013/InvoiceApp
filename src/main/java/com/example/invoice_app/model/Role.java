@@ -32,4 +32,8 @@ public class Role {
     public String toString() {
         return this.name.replace("[","").replace("]","");
     }
+
+    public long getId() {
+        return id;
+    }
 }

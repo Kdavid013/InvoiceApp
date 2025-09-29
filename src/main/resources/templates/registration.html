@@ -66,6 +66,7 @@
      //regisztráció validáció
      if (name === "" || username === "" || password === "" || confirmPassword === "" || !selectedRole) {
          alert('Please fill all the fields!');
+         submitButton.disabled() = True;
          return;
      } else if (password.length < 8) {
          alert('Password must be at least 8 characters long!');
@@ -84,9 +85,12 @@
              if (response.status === 200) {
                  alert('Successful registration!');
                  window.location.href = "/login";
-             } else {
-                 alert('Registration failed');
+             } else if (response.status === 409){
+                 alert('Username already taken.');
              }
+              else{
+                alert('Registration failed.');
+              }
          });
      } else {
          alert('Passwords do not match!');

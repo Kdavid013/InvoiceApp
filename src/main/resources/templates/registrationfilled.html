@@ -15,21 +15,16 @@
     <!--registration endpoint rákötése a formra-->
     <form th:action="@{/administration/save}" method="post" id="form" th:object="${user}">
         <input type="hidden" name="id" th:value="${user.id}" />
-        <div class="inputbox">
-            <input type="text" name="name" th:field="*{name}"/>
-            <label>Name</label>
-        </div>
-        <div class="inputbox">
-            <input type="text" name="username" th:field="*{username}"/>
-            <label>Username</label>
-        </div>
             <div class="radiobox">
-                <input type="checkbox" name="roles" value="USER"
-                       th:checked="${#lists.contains(user.roles, 'USER')}" /> <label>User</label>
-                <input type="checkbox" name="roles" value="ACCOUNTANT"
-                       th:checked="${#lists.contains(user.roles, 'ACCOUNTANT')}" /> <label>Accountant</label>
-                <input type="checkbox" name="roles" value="ADMIN"
-                       th:checked="${#lists.contains(user.roles, 'ADMIN')}"/> <label>Admin</label>
+                <th:block th:each="role: ${listRoles}">
+                    <input type="checkbox"
+                           name="roles"
+                           th:field="*{roles}"
+                           th:text="${role.name}"
+                           th:value="${role.name}"
+                           th:checked="${#lists.contains(user.roles, role.name)}"
+                    />
+                </th:block>
             </div>
         <button type="submit" id="submitbutton">Update</button>
     </form>

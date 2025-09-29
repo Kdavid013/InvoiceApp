@@ -48,6 +48,9 @@ public class UserService implements UserDetailsService {
 
     // felhasználó létrehozás dto segitségével
     public UserResponseDTO createUser(CreateUserRequestDTO request){
+        if(userRepository.findByUsername(request.username()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
         User user = new User();
         user.setName(request.name());
         user.setUsername(request.username());
