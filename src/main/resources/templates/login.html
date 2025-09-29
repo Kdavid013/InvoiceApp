@@ -1,32 +1,46 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{css/style.css}">
-    <title>Login</title>
-</head>
-<body>
-<div id="header"></div>
-<section class="login_form">
-    <div class="topbar">
-        <h2>Login</h2>
-    </div>
-    <!--login végpont bekötés-->
-    <form th:action="@{/login}" method="post" id="form">
-
-        <div class="inputbox">
-            <input type="text" name="username" />
-            <label>Username</label>
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" th:href="@{css/style.css}">
+        <title>Login</title>
+    </head>
+    <body>
+    <div id="header"></div>
+    <section class="login_form">
+        <div class="topbar">
+            <h2>Login</h2>
         </div>
-        <div class="inputbox">
-            <input type="password" name="password" />
-            <label>Password</label>
-        </div>
-        <button type="submit" id="submitbutton">Log in</button>
-        <!--link a regisztrációra-->
-        <p class="registration"><a th:href="@{/registration}">Registration</a></p>
-    </form>
-</section>
+        <!--login végpont bekötés-->
+        <form th:action="@{/login}" method="post" id="form">
 
-</body>
-</html>
+            <div class="inputbox">
+                <input type="text" name="username" />
+                <label>Username</label>
+            </div>
+            <div class="inputbox">
+                <input type="password" name="password" />
+                <label>Password</label>
+            </div>
+            <button type="submit" id="submitbutton" disabled>Log in</button>
+            <!--link a regisztrációra-->
+            <p class="registration"><a th:href="@{/registration}">Registration</a></p>
+        </form>
+    </section>
+    </body>
+    </html>
+    <script>
+        const form = document.getElementById("form");
+        const submitButton = document.getElementById("submitbutton");
+
+        form.addEventListener("input", () => {
+            const username = document.getElementsByName("username")[0].value.trim();
+            const password = document.getElementsByName("password")[0].value.trim();
+
+            if (username && password) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        });
+    </script>

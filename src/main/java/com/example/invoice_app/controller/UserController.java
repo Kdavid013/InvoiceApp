@@ -26,11 +26,9 @@ public class UserController {
             UserResponseDTO response = userService.createUser(user);
             return ResponseEntity.ok(response);
         }
-        catch (RuntimeException e){
+        catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
-
     }
 
 

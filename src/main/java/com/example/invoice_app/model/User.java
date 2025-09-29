@@ -1,8 +1,10 @@
 package com.example.invoice_app.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +25,8 @@ public class User {
 
     @Size(min = 8)
     private String password;
+
+    private Date loginDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

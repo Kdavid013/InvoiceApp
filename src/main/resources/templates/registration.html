@@ -36,7 +36,7 @@
             <input type="radio" name="role" value="ACCOUNTANT" />
             <label>Accountant</label>
         </div>
-        <button type="submit" id="submitbutton" th:href="@{login}">Register</button>
+        <button type="submit" id="submitbutton" disabled>Register</button>
         <!--link a login felületre-->
         <p class="registration"><a th:href="@{/login}">Log in</a></p>
     </form>
@@ -44,56 +44,59 @@
 </body>
 </html>
 <script>
+    const form = document.getElementById("form");
     const submitButton = document.getElementById("submitbutton");
- submitButton.addEventListener('click', (e) => {
-     e.preventDefault(); 
 
-     //adatok lekérése a formból
-     const name = document.getElementsByName('name')[0].value;
-     const username = document.getElementsByName('username')[0].value;
-     const password = document.getElementsByName('password')[0].value;
-     const confirmPassword = document.getElementsByName('passwordcon')[0].value;
-     const selectedRole = document.querySelector('input[name="role"]:checked')?.value;
+    function validateForm() {
+        // A formbeli mezők értékei
+        const name = document.getElementsByName('name')[0].value.trim();
+        const username = document.getElementsByName('username')[0].value.trim();
+        const password = document.getElementsByName('password')[0].value;
+        const confirmPassword = document.getElementsByName('passwordcon')[0].value;
+        const selectedRole = document.querySelector('input[name="role"]:checked');
 
-     //adatok összegyűjtése egy objektumba
-     const data = {
-         name,
-         username,
-         password,
-         roles: [selectedRole]
-     };
+        // megnézzük ki vannak-e töltve a mezők és a jelszó megfelelő
+        const allFilled = name && username && password && confirmPassword && selectedRole;
+        const passwordsMatch = password === confirmPassword;
+        const passwordValid = password.length >= 8;
 
-     //regisztráció validáció
-     if (name === "" || username === "" || password === "" || confirmPassword === "" || !selectedRole) {
-         alert('Please fill all the fields!');
-         submitButton.disabled() = True;
-         return;
-     } else if (password.length < 8) {
-         alert('Password must be at least 8 characters long!');
-         return;
-     } else
-     if (password === confirmPassword) {
-         fetch('/registration', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(data)
-         })
-         .then(response => {
-         //ha sikeres a regisztráció válasz üzenet
-             if (response.status === 200) {
-                 alert('Successful registration!');
-                 window.location.href = "/login";
-             } else if (response.status === 409){
-                 alert('Username already taken.');
-             }
-              else{
+        // Ha minden rendben, engedélyezzük a gombot
+        submitButton.disabled = !(allFilled && passwordsMatch && passwordValid);
+    }
+
+    // Figyeljük a form mezőit
+    form.addEventListener("input", validateForm);
+
+    // Submit gomb figyelése
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const data = {
+            name: document.getElementsByName('name')[0].value.trim(),
+            username: document.getElementsByName('username')[0].value.trim(),
+            password: document.getElementsByName('password')[0].value,
+            roles: [document.querySelector('input[name="role"]:checked').value]
+        };
+
+        // Adatok küldése a szervernek
+        fetch('/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            // Válasz kezelése
+            if (response.status === 200) {
+                alert('Successful registration!');
+                window.location.href = "/login";
+            } else if (response.status === 409) {
+                alert('Username already taken.');
+            } else {
                 alert('Registration failed.');
-              }
-         });
-     } else {
-         alert('Passwords do not match!');
-     }
- })
+            }
+        });
+    });
 </script>
+
