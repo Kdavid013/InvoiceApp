@@ -1,15 +1,14 @@
 package com.example.invoice_app.controller;
 
 import com.example.invoice_app.Sevice.InvoiceService;
+import com.example.invoice_app.Sevice.LoginAttemptService;
 import com.example.invoice_app.Sevice.RoleService;
 import com.example.invoice_app.Sevice.UserService;
-import com.example.invoice_app.dto.CreateUserRequestDTO;
 import com.example.invoice_app.dto.InvoiceRequestDTO;
 import com.example.invoice_app.dto.RoleResponseDTO;
 import com.example.invoice_app.dto.UserResponseDTO;
-import com.example.invoice_app.model.Invoice;
-import com.example.invoice_app.model.User;
 import com.example.invoice_app.security.CustomUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,15 +31,31 @@ public class ContentController {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    LoginAttemptService loginAttemptService;
+
     @GetMapping("/registration")
     public String showRegistrationPage(){
         return "registration";
     }
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage( Model model, HttpServletRequest request) {
+
+        String lastUsername = (String) request.getSession()
+                .getAttribute("SPRING_SECURITY_LAST_USERNAME");
+
+        boolean captchaRequired = false;
+        if (lastUsername != null) {
+            captchaRequired = loginAttemptService.isCaptchaRequired(lastUsername);
+        }
+        System.out.println("CHECK captchaRequired for username: " + lastUsername);
+        System.out.println("captchaRequired = " + captchaRequired);
+        model.addAttribute("captchaRequired", captchaRequired);
+        model.addAttribute("username", lastUsername);
         return "login"; // login.html
     }
+
 
     @GetMapping("/home")
     public String showHomePage(Model model) {

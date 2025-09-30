@@ -29,6 +29,15 @@ public class SecurityConfig {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Autowired
+    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    @Autowired
+    CustomAuthenticationProvider authenticationProvider;
+
     //jelszó titkosítás
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -50,12 +59,15 @@ public class SecurityConfig {
         return httpSecurity
                 // H2 Console-hoz kell
                 .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
                 // login felület elérhető mndenki számára, lecseréli a security alap belépési formját
                 .formLogin(httpForm -> {
                     httpForm.loginPage("/login")
-                            .defaultSuccessUrl("/home", true)
+//                            .defaultSuccessUrl("/home")
+                            .failureHandler(customAuthenticationFailureHandler)
+                            .successHandler(customAuthenticationSuccessHandler)
                             .permitAll();
                 })
 
