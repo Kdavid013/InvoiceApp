@@ -9,7 +9,6 @@ import org.springframework.format.annotation.NumberFormat;
 import java.time.LocalDate;
 
 public class InvoiceRequestDTO {
-    private Long id;
 
     @NotBlank(message = "Customer cannot be empty")
     private String  buyer;
@@ -31,22 +30,13 @@ public class InvoiceRequestDTO {
     @Positive(message = "Must be 0 or higher")
     private Integer price;
 
-    public InvoiceRequestDTO(Long id, String buyer, LocalDate createdate, LocalDate duedate, String product, String comment, Integer price) {
-        this.id = id;
+    public InvoiceRequestDTO( String buyer, LocalDate createdate, LocalDate duedate, String product, String comment, Integer price) {
         this.buyer = buyer;
         this.createdate = createdate;
         this.duedate = duedate;
         this.product = product;
         this.comment = comment;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getBuyer() {

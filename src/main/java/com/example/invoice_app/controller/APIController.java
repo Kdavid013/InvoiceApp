@@ -4,6 +4,7 @@ import com.example.invoice_app.Sevice.InvoiceService;
 import com.example.invoice_app.Sevice.UserService;
 import com.example.invoice_app.dto.CreateUserRequestDTO;
 import com.example.invoice_app.dto.InvoiceRequestDTO;
+import com.example.invoice_app.dto.InvoiceResponseDTO;
 import com.example.invoice_app.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,15 +36,15 @@ public class APIController {
     }
 
     @GetMapping(value = "/api/invoices")
-    public List<InvoiceRequestDTO> getInvoices() {
-        List<InvoiceRequestDTO> invoices = invoiceService.listAllInvoices();
+    public List<InvoiceResponseDTO> getInvoices() {
+        List<InvoiceResponseDTO> invoices = invoiceService.listAllInvoices();
         return invoices;
     }
 
     @GetMapping(value = "/api/invoices/{id}")
     public ResponseEntity<?> getInvoiceDetail(@PathVariable long id) {
         try {
-            InvoiceRequestDTO response = invoiceService.getInvoiceById(id);
+            InvoiceResponseDTO response = invoiceService.getInvoiceById(id);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No invoice found.");
@@ -53,7 +54,7 @@ public class APIController {
     @PostMapping(value = "/api/invoices/create")
     public ResponseEntity<?> invoiceCreate(@RequestBody InvoiceRequestDTO request) {
         try {
-            InvoiceRequestDTO response = invoiceService.createInvoice(request);
+            InvoiceResponseDTO response = invoiceService.createInvoice(request);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Invalid invoice data.");

@@ -2,6 +2,7 @@ package com.example.invoice_app.controller;
 
 import com.example.invoice_app.Sevice.InvoiceService;
 import com.example.invoice_app.dto.InvoiceRequestDTO;
+import com.example.invoice_app.dto.InvoiceResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
@@ -23,14 +24,14 @@ public class InvoiceController {
 
     @GetMapping("/invoices")
     public String showInvoicesPage(Model model) {
-        List<InvoiceRequestDTO> invoices = invoiceService.listAllInvoices();
+        List<InvoiceResponseDTO> invoices = invoiceService.listAllInvoices();
         model.addAttribute("invoices", invoices);
         return "invoices"; // login.html
     }
 
     @GetMapping("/invoices/{id}")
     public String showInvoiceDetailPage(@PathVariable Long id, Model model) {
-        InvoiceRequestDTO invoice = invoiceService.getInvoiceById(id);
+        InvoiceResponseDTO invoice = invoiceService.getInvoiceById(id);
         model.addAttribute("invoice", invoice);
         return "invoicefilled"; // login.html
     }

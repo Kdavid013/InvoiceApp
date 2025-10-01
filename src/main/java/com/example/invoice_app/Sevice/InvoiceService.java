@@ -1,6 +1,7 @@
 package com.example.invoice_app.Sevice;
 
 import com.example.invoice_app.dto.InvoiceRequestDTO;
+import com.example.invoice_app.dto.InvoiceResponseDTO;
 import com.example.invoice_app.model.Invoice;
 import com.example.invoice_app.model.InvoiceRepository;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class InvoiceService {
     }
 
     // Invoice entity létrehozása InvoiceRequestDTO-ból
-    public InvoiceRequestDTO createInvoice(InvoiceRequestDTO request){
+    public InvoiceResponseDTO createInvoice(InvoiceRequestDTO request){
         Invoice invoice = new Invoice();
         invoice.setBuyername(request.getBuyer());
         invoice.setCreatedate(request.getCreatedate());
@@ -35,21 +36,21 @@ public class InvoiceService {
     }
 
     // Az összes invoice lekérése
-    public List<InvoiceRequestDTO> listAllInvoices( ){
+    public List<InvoiceResponseDTO> listAllInvoices( ){
         return invoiceRepository.findAll().stream()
                 .map(this::toResponse).collect(Collectors.toList());
     }
 
     // Egy Invoice enitity lekérése és átalakítása DTO-vá
-    public InvoiceRequestDTO getInvoiceById(long id){
+    public InvoiceResponseDTO getInvoiceById(long id){
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Invoice not found"));
         return toResponse(invoice);
     }
 
     // Invoice entity átalakítása InvoiceRequestDTO-vá
-    private InvoiceRequestDTO toResponse(Invoice invoice){
-        return new InvoiceRequestDTO(
+    private InvoiceResponseDTO toResponse(Invoice invoice){
+        return new InvoiceResponseDTO(
                 invoice.getId(),
                 invoice.getBuyername(),
                 invoice.getCreatedate(),
