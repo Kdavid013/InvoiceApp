@@ -21,12 +21,12 @@ public class InvoiceService {
 
     public InvoiceRequestDTO createInvoice(InvoiceRequestDTO request){
         Invoice invoice = new Invoice();
-        invoice.setBuyername(request.buyer());
-        invoice.setCreatedate(LocalDate.parse(request.createdate()));
-        invoice.setDuedate(LocalDate.parse(request.duedate()));
-        invoice.setProduct(request.product());
-        invoice.setComment(request.comment());
-        invoice.setPrice(request.price());
+        invoice.setBuyername(request.getBuyer());
+        invoice.setCreatedate(request.getCreatedate());
+        invoice.setDuedate(request.getDuedate());
+        invoice.setProduct(request.getProduct());
+        invoice.setComment(request.getComment());
+        invoice.setPrice(request.getPrice());
 
         Invoice saved = invoiceRepository.save(invoice);
         return toResponse(saved);
@@ -44,13 +44,6 @@ public class InvoiceService {
     }
 
     private InvoiceRequestDTO toResponse(Invoice invoice){
-        return new InvoiceRequestDTO(
-                invoice.getId(),
-                invoice.getBuyername(),
-                invoice.getCreatedate().toString(),
-                invoice.getDuedate().toString(),
-                invoice.getProduct(),
-                invoice.getComment(),
-                invoice.getPrice());
+        return new InvoiceRequestDTO(invoice.getId(), invoice.getBuyername(),invoice.getCreatedate() ,invoice.getDuedate(),invoice.getProduct(),invoice.getComment(),invoice.getPrice());
     }
 }

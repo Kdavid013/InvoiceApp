@@ -35,9 +35,6 @@ public class SecurityConfig {
     @Autowired
     CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    @Autowired
-    CustomAuthenticationProvider authenticationProvider;
-
     //jelszó titkosítás
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -51,8 +48,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(encoder);
         return provider;
     }
-
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{

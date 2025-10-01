@@ -5,7 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -20,20 +23,22 @@ public class Invoice {
     @NotBlank
     private String buyername;
 
-    @NotBlank
+    @NotNull
     @DateTimeFormat
     private LocalDate createdate;
 
-    @NotBlank
+    @NotNull
     @DateTimeFormat
     private LocalDate duedate;
 
     @NotBlank
     private String product;
 
-    private String comment;
+    String comment;
 
-    @NotBlank
+    @NotNull
+    @NumberFormat
+    @Positive
     private int price;
 
     public String getBuyername() {

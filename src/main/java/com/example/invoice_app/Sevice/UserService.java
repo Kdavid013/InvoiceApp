@@ -80,7 +80,11 @@ public class UserService implements UserDetailsService {
         Set<String> roleNames = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet());
-        return new UserResponseDTO(user.getId(),user.getName(), user.getUsername(), roleNames);
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getUsername(),
+                roleNames);
     }
 
     // lekérjük az összes felhasználót

@@ -14,28 +14,48 @@
         <form th:action="@{/invoice/create}" method="post" id="form" th:object="${invoice}">
             
             <div class="inputbox">
-                <input type="text" name="buyer" th:field="*{buyer}" required/>
-                <label>BuyerName</label>
+                <input type="text" th:field="*{buyer}" placeholder="Customer"/>
+                <span th:if="${#fields.hasErrors('buyer')}"
+                      th:errors="*{buyer}"
+                      class="error-message"
+                ></span>
+            </div>
+            <label>Date of creation</label>
+            <div class="inputbox">
+                <input type="date" th:field="*{createdate}"/>
+                <span th:if="${#fields.hasErrors('createdate')}"
+                      th:errors="*{createdate}"
+                      class="error-message"
+                ></span>
+            </div>
+            <label>Due date</label>
+            <div class="inputbox">
+                <input type="date" th:field="*{duedate}"/>
+                <span th:if="${#fields.hasErrors('duedate')}"
+                      th:errors="*{duedate}"
+                      class="error-message"
+                ></span>
             </div>
             <div class="inputbox">
-                <input type="date" name="createdate" th:field="*{createdate}" required/>
-                <label>Date of creation</label>
+                <input type="text" th:field="*{product}" placeholder="Product"/>
+                <span th:if="${#fields.hasErrors('product')}"
+                      th:errors="*{product}"
+                      class="error-message"
+                ></span>
             </div>
             <div class="inputbox">
-                <input type="date" name="duedate" th:field="*{duedate}" required/>
-                <label>Due date</label>
+                <input type="text" th:field="*{comment}" placeholder="Comment"/>
+                <span th:if="${#fields.hasErrors('product')}"
+                      th:errors="*{product}"
+                      class="error-message"
+                ></span>
             </div>
             <div class="inputbox">
-                <input type="text" name="product" th:field="*{product}" required/>
-                <label>Product</label>
-            </div>
-            <div class="inputbox">
-                <input type="text-field" name="comment" th:field="*{comment}" required/>
-                <label>Comment</label>
-            </div>
-            <div class="inputbox">
-                <input type="text" name="price" th:field="*{price}" required/>
-                <label>Price</label>
+                <input type="text" th:field="*{price}" placeholder="Price"/>
+                <span th:if="${#fields.hasErrors('price')}"
+                      th:errors="*{price}"
+                      class="error-message"
+                      ></span>
             </div>
             <button type="submit" id="submitbutton">Create</button>
             <p class="registration"><a th:href="@{/invoices}">Back</a></p>

@@ -15,20 +15,16 @@
     <!--registration endpoint rákötése a formra-->
     <form th:action="@{/registration}" method="post" id="form">
         <div class="inputbox">
-            <input type="text" name="name" />
-            <label>Name</label>
+            <input type="text" name="name"  placeholder="Name"/>
         </div>
         <div class="inputbox">
-            <input type="text" name="username" />
-            <label>Username</label>
+            <input type="text" name="username" placeholder="Username"/>
         </div>
         <div class="inputbox">
-            <input type="password" name="password" />
-            <label>Password</label>
+            <input type="password" name="password" placeholder="Password"/>
         </div>
         <div class="inputbox">
-            <input type="password" name="passwordcon" />
-            <label>Confirm password</label>
+            <input type="password" name="passwordcon" placeholder="Confirm password"/>
         </div>
         <div class="radiobox">
             <input type="radio" name="role" value="USER" />

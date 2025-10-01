@@ -6,34 +6,40 @@
         <title>Invoice creation</title>
     </head>
     <body>
-        <div id="header"></div>
+        <div id="header">
+            <a class="back-link" th:href="@{/home}">Home</a>
+        </div>
     <section class="login_form">
         <div class="topbar">
                 <h2>New invoice</h2>
             </div>
         <form method="post" id="form" th:object="${invoice}" >
-            
+            <label>BuyerName</label>
             <div class="inputbox">
                 <input type="text" name="buyer" th:field="*{buyer}" readonly/>
-                <label>BuyerName</label>
+
             </div>
+            <label>Date of creation</label>
             <div class="inputbox">
                 <input type="date" name="createdate" th:field="*{createdate}"  readonly/>
-                <label>Date of creation</label>
+
             </div>
+            <label>Due date</label>
             <div class="inputbox">
                 <input type="date" name="duedate" th:field="*{duedate}" readonly/>
-                <label>Due date</label>
+
             </div>
+            <label>Product</label>
             <div class="inputbox">
                 <input type="text" name="product" th:field="*{product}" readonly/>
-                <label>Product</label>
+
             </div>
+            <label>Price</label>
             <div class="inputbox">
                 <input type="text" name="price" th:field="*{price}" readonly/>
-                <label>Price</label>
+
             </div>
-            <p class="registration"><a th:href="@{/invoices}">Back</a></p>
+            <p class="registration"><a th:href="@{/invoices}">List of invoices</a></p>
         </form>
     </section>
     </body>

@@ -5,7 +5,7 @@
         <link rel="stylesheet" th:href="@{css/style.css}">
         <title>Login</title>
     </head>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <body>
     <div id="header"></div>
     <section class="login_form">
@@ -15,14 +15,12 @@
         <!--login végpont bekötés-->
         <form th:action="@{/login}" method="post" id="form">
             <div class="inputbox">
-                <input type="text" name="username" th:value="${username}" placeholder="Username" />
-                <label>Username</label>
+                <input type="text" name="username" placeholder="Username" />
             </div>
             <div class="inputbox">
                 <input type="password" name="password" placeholder="Password"/>
-                <label>Password</label>
             </div>
-            <div>
+            <div th:if="${captchaRequired == true}">
                 <div class="g-recaptcha" data-sitekey="6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt"></div>
             </div>
             <button type="submit" id="submitbutton" disabled>Log in</button>
@@ -35,15 +33,57 @@
     <script>
         const form = document.getElementById("form");
         const submitButton = document.getElementById("submitbutton");
+        const captchaDiv = document.querySelector(".g-recaptcha");
 
-        form.addEventListener("input", () => {
+        // A logikát kiszerveztük a checkForm függvénybe
+        const checkForm = () => {
             const username = document.getElementsByName("username")[0].value.trim();
             const password = document.getElementsByName("password")[0].value.trim();
 
-            if (username && password) {
+            let captchaPassed = true;
+
+            // Ha a CAPTCHA mező létezik a HTML-ben, ellenőrizni kell
+            if (captchaDiv) {
+                // Fontos: a grecaptcha.getResponse() csak a reCAPTCHA API betöltése után érhető el
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse) {
+                    const response = grecaptcha.getResponse();
+                    captchaPassed = response.length > 0;
+                } else {
+                    // Ha a CAPTCHA div van, de a grecaptcha még nem töltődött be/renderelve,
+                    // ideiglenesen ne engedélyezzük a gombot
+                    captchaPassed = false;
+                }
+            }
+
+            if (username && password && captchaPassed) {
                 submitButton.disabled = false;
             } else {
                 submitButton.disabled = true;
             }
-        });
+        };
+
+        form.addEventListener("input", checkForm);
+
+        // EZ A FÜGGVÉNY FUT LE, MIUTÁN A GOOGLE API BETÖLTŐDÖTT
+        window.onloadCallback = function() {
+            if (captchaDiv) {
+                 // 1. Manuális CAPTCHA renderelés (explicit mód)
+                 grecaptcha.render(captchaDiv, {
+                    'sitekey' : '6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt', // Stringként megadva
+                    'callback' : checkForm, // Sikeres pipálás után engedélyezi a gombot
+                    'expired-callback' : checkForm // Lejárat esetén letiltja
+                 });
+            }
+
+            // 2. Kezdeti ellenőrzés a DOM betöltése és a CAPTCHA inicializálása után
+            // Ez engedélyezi a gombot, ha nincs CAPTCHA
+            checkForm();
+        };
+
+        // Ezzel biztosítjuk, hogy ha nincs CAPTCHA (azaz a captchaDiv nem látható),
+        // a gomb engedélyezve legyen, amint a felhasználó kitölti a mezőket.
+        // (A checkForm már figyeli az input eseményeket.)
+        // Ha a 'captchaRequired' false, a captchaDiv == null, a captchaPassed alapból 'true'.
+
     </script>
+

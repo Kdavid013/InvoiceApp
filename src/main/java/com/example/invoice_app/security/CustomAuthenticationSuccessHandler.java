@@ -2,6 +2,8 @@ package com.example.invoice_app.security;
 
 import com.example.invoice_app.Sevice.LoginAttemptService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +23,16 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        loginAttemptService.loginSucceeded(authentication.getName());
+
+        String username = request.getParameter("username");
+
+        System.out.println("SUCCESS HANDLER TRIGGERED for user: " + authentication.getName());
+        loginAttemptService.loginSucceeded(username);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
         response.sendRedirect("/home");
     }
 }

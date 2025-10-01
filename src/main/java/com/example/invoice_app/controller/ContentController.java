@@ -8,12 +8,13 @@ import com.example.invoice_app.dto.InvoiceRequestDTO;
 import com.example.invoice_app.dto.RoleResponseDTO;
 import com.example.invoice_app.dto.UserResponseDTO;
 import com.example.invoice_app.security.CustomUserDetails;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +24,7 @@ import java.util.List;
 public class ContentController {
 
     @Autowired
-    public InvoiceService invoiceService;
-
-    @Autowired
     public UserService userService;
-
-    @Autowired
-    RoleService roleService;
 
     @Autowired
     LoginAttemptService loginAttemptService;
@@ -39,76 +34,37 @@ public class ContentController {
         return "registration";
     }
 
+//    boolean captchaRequired = false;
+//    captchaRequired = loginAttemptService.isCaptchaRequired();
+//        model.addAttribute("captchaRequired", captchaRequired);
+
     @GetMapping("/login")
-    public String showLoginPage( Model model, HttpServletRequest request) {
+    public String showLoginPage(@RequestParam(value = "error", required = false) String error,
+                                @RequestParam(value = "captcha_required", required = false) String captchaRequired,
+                                Model model) {
 
-        String lastUsername = (String) request.getSession()
-                .getAttribute("SPRING_SECURITY_LAST_USERNAME");
+        // ... egyéb hibaüzenet kezelés ...
+        System.out.println(captchaRequired);
 
-        boolean captchaRequired = false;
-        if (lastUsername != null) {
-            captchaRequired = loginAttemptService.isCaptchaRequired(lastUsername);
+        if (captchaRequired != null) {
+            model.addAttribute("captchaRequired", true);
+        } else {
+            model.addAttribute("captchaRequired", false);
         }
-        System.out.println("CHECK captchaRequired for username: " + lastUsername);
-        System.out.println("captchaRequired = " + captchaRequired);
-        model.addAttribute("captchaRequired", captchaRequired);
-        model.addAttribute("username", lastUsername);
+
+        if (error != null) {
+            model.addAttribute("errorMessage", "Invalid username or password");
+        }
+
         return "login"; // login.html
     }
-
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        CustomUserDetails user = userService.loadUserByUsername(username); // implement this method if needed
+        CustomUserDetails user = userService.loadUserByUsername(username);
         model.addAttribute("user", user);
         return "home"; // login.html
     }
-
-    @GetMapping("/administration")
-    public String showAdministrationPage(Model model) {
-        List<UserResponseDTO> users = userService.listAllUsers();
-        model.addAttribute("users", users);
-        return "administration"; // login.html
-    }
-
-    @GetMapping("administration/edit/{id}")
-    public String editUser(@PathVariable long id, Model model){
-
-        UserResponseDTO user = userService.getUserById(id);
-        List<RoleResponseDTO> listRoles = roleService.listAllRoles();
-
-        model.addAttribute("user", user);
-        model.addAttribute("listRoles", listRoles);
-
-        return "registrationfilled";
-    }
-
-    @PostMapping("administration/save")
-    public String updateUserRoles(@RequestParam Long id, @RequestParam List<String> roles) {
-        userService.userSetRoles(id, roles);
-        return "redirect:/administration";
-    }
-
-    @PostMapping(value = "/invoice/create")
-    public String createInvoice(@ModelAttribute InvoiceRequestDTO invoice){
-        invoiceService.createInvoice(invoice);
-        return "redirect:/invoices";
-    }
-
-    @PostMapping(value = "/administration/delete/{id}")
-    public String deleteUser(@PathVariable long id){
-        userService.deleteUserById(id);
-        return "redirect:/administration";
-    }
-
-
-
-//    @PostMapping("/login")
-//    public String processLogin(@RequestParam String username, @RequestParam String password) {
-//        // hitelesítés logika
-//        return "/home";
-//    }
-
 }

@@ -1,91 +1,64 @@
 package com.example.invoice_app.controller;
 
-import com.example.invoice_app.Sevice.InvoiceService;
+import com.example.invoice_app.Sevice.RoleService;
 import com.example.invoice_app.Sevice.UserService;
-import com.example.invoice_app.dto.CreateUserRequestDTO;
-import com.example.invoice_app.dto.InvoiceRequestDTO;
+import com.example.invoice_app.dto.RoleResponseDTO;
 import com.example.invoice_app.dto.UserResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// json és szöveg típusú végpontok használatához RestController
-@RestController
+@Controller
 public class UserController {
-
-    // létrehozzuk a userService-t hogy képesek legyünk az adatbázisba elmenteni a felhasználót
     @Autowired
-    private UserService userService;
+    public UserService userService;
 
     @Autowired
-    private InvoiceService invoiceService;
+    RoleService roleService;
 
-    // végpont bekötve a /registration-re, json típusú fájlt vár
-    @PostMapping(value = "/registration")
-    public ResponseEntity<?> createUser(@RequestBody CreateUserRequestDTO user) {
-        try {
-            UserResponseDTO response = userService.createUser(user);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+    @GetMapping("/administration")
+    public String showAdministrationPage(Model model) {
+        List<UserResponseDTO> users = userService.listAllUsers();
+        model.addAttribute("users", users);
+        return "administration"; // login.html
     }
 
-    @GetMapping(value = "/api/invoices")
-    public List<InvoiceRequestDTO> getInvoices() {
-        List<InvoiceRequestDTO> invoices = invoiceService.listAllInvoices();
-        return invoices;
+    @GetMapping("administration/edit/{id}")
+    public String editUser(@PathVariable long id, Model model){
+
+        UserResponseDTO user = userService.getUserById(id);
+        List<RoleResponseDTO> listRoles = roleService.listAllRoles();
+
+        model.addAttribute("user", user);
+        model.addAttribute("listRoles", listRoles);
+
+        return "registrationfilled";
     }
 
-    @GetMapping(value = "/api/invoices/{id}")
-    public ResponseEntity<?> getInvoiceDetail(@PathVariable long id) {
-        try {
-            InvoiceRequestDTO response = invoiceService.getInvoiceById(id);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No invoice found.");
-        }
-    }
+    @PostMapping("administration/save")
+    public String updateUserRoles(@Valid @ModelAttribute("user")UserResponseDTO user,
+                                  @RequestParam Long id,
+                                  @RequestParam List<String> roles,
+                                  BindingResult bindingResult,
+                                  Model model) {
 
-    @PostMapping(value = "/api/invoices/create")
-    public ResponseEntity<?> invoiceCreate(@RequestBody InvoiceRequestDTO request) {
-        try {
-            InvoiceRequestDTO response = invoiceService.createInvoice(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Invalid invoice data.");
-        }
-    }
-
-    @GetMapping("/api/administration")
-    public ResponseEntity<List<UserResponseDTO>> showAdministrationPage() {
-        List<UserResponseDTO> response = userService.listAllUsers();
-        return ResponseEntity.ok(response); // login.html
-    }
-
-    @PostMapping("/api/administration/edit/{id}")
-    public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody List<String> roles) {
-        try {
-            userService.userSetRoles(id, roles);
-            UserResponseDTO response = userService.getUserById(id);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        if(bindingResult.hasErrors()){
+            model.addAttribute("listRoles" , roleService.listAllRoles());
+            return "registrationfilled";
         }
 
+        userService.userSetRoles(id, roles);
+        return "redirect:/administration";
     }
 
-    @PostMapping(value = "api/administration/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        try {
-            userService.deleteUserById(id);
-            return ResponseEntity.ok("User deleted");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
+    @PostMapping(value = "/administration/delete/{id}")
+    public String deleteUser(@PathVariable long id){
+        userService.deleteUserById(id);
+        return "redirect:/administration";
     }
-
 }
