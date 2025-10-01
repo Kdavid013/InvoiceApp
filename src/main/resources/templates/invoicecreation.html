@@ -6,7 +6,9 @@
         <title>Invoice creation</title>
     </head>
     <body>
-        <div id="header"></div>
+        <div id="header">
+            <a class="back-link" th:href="@{/home}">Home</a>
+        </div>
     <section class="login_form">
         <div class="topbar">
                 <h2>New invoice</h2>
@@ -58,7 +60,7 @@
                       ></span>
             </div>
             <button type="submit" id="submitbutton">Create</button>
-            <p class="registration"><a th:href="@{/invoices}">Back</a></p>
+            <p class="registration"><a th:href="@{/invoices}">List of invoices</a></p>
         </form>
     </section>
     </body>

@@ -37,7 +37,6 @@ public class Invoice {
     String comment;
 
     @NotNull
-    @NumberFormat
     @Positive
     private int price;
 

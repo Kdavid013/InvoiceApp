@@ -3,6 +3,7 @@ package com.example.invoice_app.controller;
 import com.example.invoice_app.Sevice.RoleService;
 import com.example.invoice_app.Sevice.UserService;
 import com.example.invoice_app.dto.RoleResponseDTO;
+import com.example.invoice_app.dto.UpdateUserRolesDTO;
 import com.example.invoice_app.dto.UserResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,14 @@ import java.util.List;
 
 @Controller
 public class UserController {
+
+    // Szükséges Service-ek beinjektálása
     @Autowired
     public UserService userService;
 
     @Autowired
     RoleService roleService;
+
 
     @GetMapping("/administration")
     public String showAdministrationPage(Model model) {
@@ -41,9 +45,7 @@ public class UserController {
     }
 
     @PostMapping("administration/save")
-    public String updateUserRoles(@Valid @ModelAttribute("user")UserResponseDTO user,
-                                  @RequestParam Long id,
-                                  @RequestParam List<String> roles,
+    public String updateUserRoles(@Valid @ModelAttribute("user") UpdateUserRolesDTO user,
                                   BindingResult bindingResult,
                                   Model model) {
 
@@ -52,7 +54,7 @@ public class UserController {
             return "registrationfilled";
         }
 
-        userService.userSetRoles(id, roles);
+        userService.userSetRoles(user.getId(), user.getRoles());
         return "redirect:/administration";
     }
 

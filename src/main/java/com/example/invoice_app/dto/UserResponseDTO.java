@@ -3,17 +3,21 @@ package com.example.invoice_app.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
 import java.util.Set;
 
 public class UserResponseDTO {
+
     private Long id;
     @NotBlank
     private String name;
+
     @NotBlank
     private String username;
+
     @NotNull
     private Set<String> roles;
+
+
 
 
     public UserResponseDTO(Long id, String name, String username, Set<String> roles) {

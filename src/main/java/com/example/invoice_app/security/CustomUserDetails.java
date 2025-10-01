@@ -11,12 +11,11 @@ public class CustomUserDetails implements UserDetails {
 
     private final User user;
 
-
-
     public CustomUserDetails(User user) {
         this.user = user;
     }
 
+    // Az authority-k biztosítás a felhasználóknak az adatbázisban szereplő Role-ok szerint
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getRoles().stream()
@@ -40,6 +39,10 @@ public class CustomUserDetails implements UserDetails {
 
     public String getRole(){
         return user.getRoles().toString();
+    }
+
+    public String getLoginDate(){
+        return user.getLoginDate().toString();
     }
 
     @Override

@@ -26,6 +26,10 @@
                     />
                 </th:block>
             </div>
+        <span th:if="${#fields.hasErrors('roles')}"
+              th:errors="*{roles}"
+              class="error-message">
+        </span>
         <button type="submit" id="submitbutton">Update</button>
     </form>
 </section>

@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceService {
 
+    // beinjekáljuk az invoice repository-t hogy képesek legyünk az adatbázisba menteni
     private InvoiceRepository invoiceRepository;
-
     public InvoiceService(InvoiceRepository invoiceRepository){
         this.invoiceRepository = invoiceRepository;
     }
 
+    // Invoice entity létrehozása InvoiceRequestDTO-ból
     public InvoiceRequestDTO createInvoice(InvoiceRequestDTO request){
         Invoice invoice = new Invoice();
         invoice.setBuyername(request.getBuyer());
@@ -26,24 +27,36 @@ public class InvoiceService {
         invoice.setDuedate(request.getDuedate());
         invoice.setProduct(request.getProduct());
         invoice.setComment(request.getComment());
-        invoice.setPrice(request.getPrice());
+        invoice.setPrice(request.getPrice()
+        );
 
         Invoice saved = invoiceRepository.save(invoice);
         return toResponse(saved);
     }
 
+    // Az összes invoice lekérése
     public List<InvoiceRequestDTO> listAllInvoices( ){
         return invoiceRepository.findAll().stream()
                 .map(this::toResponse).collect(Collectors.toList());
     }
 
+    // Egy Invoice enitity lekérése és átalakítása DTO-vá
     public InvoiceRequestDTO getInvoiceById(long id){
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Invoice not found"));
         return toResponse(invoice);
     }
 
+    // Invoice entity átalakítása InvoiceRequestDTO-vá
     private InvoiceRequestDTO toResponse(Invoice invoice){
-        return new InvoiceRequestDTO(invoice.getId(), invoice.getBuyername(),invoice.getCreatedate() ,invoice.getDuedate(),invoice.getProduct(),invoice.getComment(),invoice.getPrice());
+        return new InvoiceRequestDTO(
+                invoice.getId(),
+                invoice.getBuyername(),
+                invoice.getCreatedate(),
+                invoice.getDuedate(),
+                invoice.getProduct(),
+                invoice.getComment(),
+                invoice.getPrice()
+        );
     }
 }

@@ -28,10 +28,6 @@ public class ContentController {
         return "registration";
     }
 
-//    boolean captchaRequired = false;
-//    captchaRequired = loginAttemptService.isCaptchaRequired();
-//        model.addAttribute("captchaRequired", captchaRequired);
-
     @GetMapping("/login")
     public String showLoginPage(@RequestParam(value = "error", required = false) String error,
                                 Model model,
@@ -40,12 +36,12 @@ public class ContentController {
         Boolean captchaRequired = (Boolean) session.getAttribute("captchaRequired");
         model.addAttribute("captchaRequired", captchaRequired != null ? captchaRequired : false);
 
-        if (error != null) {
-            model.addAttribute("errorMessage", "Invalid username or password");
-        }
+        String errorMessage = (String) session.getAttribute("errorMessage");
+        model.addAttribute("errorMessage", errorMessage);
 
         // A session-beli flag törlése, hogy a következő GET-nél ne maradjon
         session.removeAttribute("captchaRequired");
+        session.removeAttribute("errorMessage");
 
         return "login";
     }

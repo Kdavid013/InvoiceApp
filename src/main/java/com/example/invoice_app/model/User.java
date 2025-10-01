@@ -81,4 +81,11 @@ public class User {
         this.roles.add(role);
     }
 
+    public Date getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
 }

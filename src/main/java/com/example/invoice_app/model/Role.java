@@ -13,6 +13,7 @@ public class Role {
 
     @NotBlank
     private String name;
+
     private String description;
 
     public String getName() {

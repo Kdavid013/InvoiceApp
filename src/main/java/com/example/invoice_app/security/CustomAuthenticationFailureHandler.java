@@ -19,28 +19,28 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
+    // LoginAttemptService injektálása
     private final LoginAttemptService loginAttemptService;
 
     public CustomAuthenticationFailureHandler(LoginAttemptService loginAttemptService) {
         this.loginAttemptService = loginAttemptService;
     }
 
+    // A rossz bejelentkezések számolása
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
+
         String username = request.getParameter("username"); // A bemeneti mező neve a HTML-ben
 
-        if (username != null) {
-            loginAttemptService.loginFailed(username);
-
-            if (loginAttemptService.isCaptchaRequired(username)) {
-                // CAPTCHA-t kell kérni → sessionbe tesszük
-                request.getSession().setAttribute("captchaRequired", true);
-            }
-
+        loginAttemptService.loginFailed(username);
+        if (loginAttemptService.isCaptchaRequired(username)) {
+            // CAPTCHA-t kell kérni → sessionbe tesszük
+            request.getSession().setAttribute("captchaRequired", true);
         }
 
+        request.getSession().setAttribute("errorMessage", "Invalid username or password");
         response.sendRedirect(request.getContextPath() + "/login?error");
 
     }

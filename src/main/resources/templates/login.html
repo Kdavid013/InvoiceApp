@@ -23,6 +23,9 @@
             <div th:if="${captchaRequired == true}">
                 <div class="g-recaptcha" data-sitekey="6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt"></div>
             </div>
+            <div th:if="${errorMessage != null}" class="error-message"  >
+                <p th:text="${errorMessage}"></p>
+            </div>
             <button type="submit" id="submitbutton" disabled>Log in</button>
             <!--link a regisztrációra-->
             <p class="registration"><a th:href="@{/registration}">Registration</a></p>

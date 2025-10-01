@@ -1,23 +1,16 @@
 package com.example.invoice_app.security;
 
-import com.example.invoice_app.Sevice.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
@@ -25,9 +18,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Autowired
-    DataSource dataSource;
 
     @Autowired
     CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
@@ -40,6 +30,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService  uds, PasswordEncoder encoder){
@@ -60,7 +51,6 @@ public class SecurityConfig {
                 // login felület elérhető mndenki számára, lecseréli a security alap belépési formját
                 .formLogin(httpForm -> {
                     httpForm.loginPage("/login")
-//                            .defaultSuccessUrl("/home")
                             .failureHandler(customAuthenticationFailureHandler)
                             .successHandler(customAuthenticationSuccessHandler)
                             .permitAll();
@@ -80,20 +70,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login")
                         .permitAll()
                 )
-                // basic belépés login form nélkül
-//                .httpBasic(Customizer.withDefaults())
                 .build();
     }
-
-//    @Bean public UserDetailsService userDetailsService(){
-//        UserDetails user1 = User.withUserDetails("user1")
-//                .password("{noop}password1")
-//                .roles("USER")
-//                .build();
-//
-//
-//        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-//        return new InMemoryUserDetailsManager(user1,admin1,accountant1);
-//
-//    }
 }
