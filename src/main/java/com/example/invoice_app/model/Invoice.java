@@ -16,7 +16,7 @@ import java.util.Date;
 @Entity
 public class Invoice {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
 

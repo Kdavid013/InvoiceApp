@@ -2,8 +2,11 @@ package com.example.invoice_app.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +21,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     @Column(unique = true)
     private String username;
 
+    @NotBlank
     @Size(min = 8)
     private String password;
 
@@ -34,6 +40,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @NotEmpty
     @Size(min = 1)
     private Set<Role> roles = new HashSet<>();
 
