@@ -1,20 +1,14 @@
 package com.example.invoice_app.controller;
 
-import com.example.invoice_app.Sevice.InvoiceService;
 import com.example.invoice_app.Sevice.LoginAttemptService;
-import com.example.invoice_app.Sevice.RoleService;
 import com.example.invoice_app.Sevice.UserService;
-import com.example.invoice_app.dto.InvoiceRequestDTO;
-import com.example.invoice_app.dto.RoleResponseDTO;
-import com.example.invoice_app.dto.UserResponseDTO;
 import com.example.invoice_app.security.CustomUserDetails;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,23 +34,20 @@ public class ContentController {
 
     @GetMapping("/login")
     public String showLoginPage(@RequestParam(value = "error", required = false) String error,
-                                @RequestParam(value = "captcha_required", required = false) String captchaRequired,
-                                Model model) {
+                                Model model,
+                                HttpSession session) {
 
-        // ... egyéb hibaüzenet kezelés ...
-        System.out.println(captchaRequired);
-
-        if (captchaRequired != null) {
-            model.addAttribute("captchaRequired", true);
-        } else {
-            model.addAttribute("captchaRequired", false);
-        }
+        Boolean captchaRequired = (Boolean) session.getAttribute("captchaRequired");
+        model.addAttribute("captchaRequired", captchaRequired != null ? captchaRequired : false);
 
         if (error != null) {
             model.addAttribute("errorMessage", "Invalid username or password");
         }
 
-        return "login"; // login.html
+        // A session-beli flag törlése, hogy a következő GET-nél ne maradjon
+        session.removeAttribute("captchaRequired");
+
+        return "login";
     }
 
     @GetMapping("/home")

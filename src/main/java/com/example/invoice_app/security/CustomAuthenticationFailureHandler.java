@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -32,27 +33,16 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         if (username != null) {
             loginAttemptService.loginFailed(username);
+
+            if (loginAttemptService.isCaptchaRequired(username)) {
+                // CAPTCHA-t kell kérni → sessionbe tesszük
+                request.getSession().setAttribute("captchaRequired", true);
+            }
+
         }
 
-        String targetUrl = "/login?error"; // Alapértelmezett hiba URL
+        response.sendRedirect(request.getContextPath() + "/login?error");
 
-        if (username != null && loginAttemptService.isCaptchaRequired(username)) {
-            // A küszöb elérése esetén CAPTCHA-t kérő paraméterrel irányítunk át
-            System.out.println("DEBUG: captcha required értéke "+loginAttemptService.isCaptchaRequired(username));
-
-            targetUrl += "&captcha_required=true";
-        }
-
-        // Ezt hívja meg az ősosztály, ami beállítja a failureUrl-t
-        // Érdemes a securityFilterChain-ben a .failureUrl("/login?error") helyett
-        // .failureHandler(customAuthenticationFailureHandler) hívást használni,
-        // amit Ön már meg is tett.
-        // A SimpleUrlAuthenticationFailureHandler ősosztály használata esetén az
-        // setDefaultFailureUrl("/login?error"); hívás segítene.
-        // Most kézzel állítjuk be a redirectet, mivel az ősosztály a fix failureUrl-t használná.
-
-        // Mivel Ön a CustomAuthenticationFailureHandler-t használja:
-        response.sendRedirect(targetUrl);
     }
 
 }
