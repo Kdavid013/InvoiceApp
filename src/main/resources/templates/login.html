@@ -1,92 +1,74 @@
-    <!DOCTYPE html>
-    <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" th:href="@{css/style.css}">
-        <title>Login</title>
-    </head>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{css/style.css}">
+    <title>Login</title>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-    <body>
-    <div id="header"></div>
-    <section class="login_form">
-        <div class="topbar">
-            <h2>Login</h2>
+</head>
+<body>
+<div id="header"></div>
+
+<section class="login_form">
+    <div class="topbar">
+        <h2>Login</h2>
+    </div>
+
+    <form th:action="@{/login}" method="post" id="form">
+        <div class="inputbox">
+            <input type="text" name="username" placeholder="Username" required/>
         </div>
-        <!--login végpont bekötés-->
-        <form th:action="@{/login}" method="post" id="form">
-            <div class="inputbox">
-                <input type="text" name="username" placeholder="Username" />
-            </div>
-            <div class="inputbox">
-                <input type="password" name="password" placeholder="Password"/>
-            </div>
-            <div th:if="${captchaRequired == true}">
-                <div class="g-recaptcha" data-sitekey="6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt"></div>
-            </div>
-            <div th:if="${errorMessage != null}" class="error-message"  >
-                <p th:text="${errorMessage}"></p>
-            </div>
-            <button type="submit" id="submitbutton" disabled>Log in</button>
-            <!--link a regisztrációra-->
-            <p class="registration"><a th:href="@{/registration}">Registration</a></p>
-        </form>
-    </section>
-    </body>
-    </html>
-    <script>
-        const form = document.getElementById("form");
-        const submitButton = document.getElementById("submitbutton");
-        const captchaDiv = document.querySelector(".g-recaptcha");
+        <div class="inputbox">
+            <input type="password" name="password" placeholder="Password" required/>
+        </div>
 
-        // A logikát kiszerveztük a checkForm függvénybe
-        const checkForm = () => {
-            const username = document.getElementsByName("username")[0].value.trim();
-            const password = document.getElementsByName("password")[0].value.trim();
+        <!-- CAPTCHA csak ha kötelező -->
+        <div th:if="${captchaRequired}">
+            <div id="recaptcha-container" class="g-recaptcha" data-sitekey="6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt"></div>
+        </div>
 
-            let captchaPassed = true;
+        <!-- hibaüzenet -->
+        <div th:if="${errorMessage != null}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+        <button type="submit" id="submitbutton" disabled>Log in</button>
+        <p class="registration"><a th:href="@{/registration}">Registration</a></p>
+    </form>
+</section>
 
-            // Ha a CAPTCHA mező létezik a HTML-ben, ellenőrizni kell
-            if (captchaDiv) {
-                // Fontos: a grecaptcha.getResponse() csak a reCAPTCHA API betöltése után érhető el
-                if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse) {
-                    const response = grecaptcha.getResponse();
-                    captchaPassed = response.length > 0;
-                } else {
-                    // Ha a CAPTCHA div van, de a grecaptcha még nem töltődött be/renderelve,
-                    // ideiglenesen ne engedélyezzük a gombot
+<script>
+    const form = document.getElementById("form");
+    const submitButton = document.getElementById("submitbutton");
+    const usernameInput = form.querySelector('input[name="username"]');
+    const passwordInput = form.querySelector('input[name="password"]');
+    let captchaPassed = false;
+
+    function checkForm() {
+        const usernameFilled = usernameInput.value.trim().length > 0;
+        const passwordFilled = passwordInput.value.trim().length > 0;
+        submitButton.disabled = !(usernameFilled && passwordFilled && (!document.getElementById("recaptcha-container") || captchaPassed));
+    }
+
+    form.addEventListener("input", checkForm);
+
+    window.onloadCallback = function() {
+        const captchaContainer = document.getElementById("recaptcha-container");
+        if(captchaContainer) {
+            grecaptcha.render(captchaContainer, {
+                'sitekey': '6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt',
+                'callback': function(token) {
+                    captchaPassed = token.length > 0;
+                    checkForm();
+                },
+                'expired-callback': function() {
                     captchaPassed = false;
+                    checkForm();
                 }
-            }
+            });
+        }
+        checkForm();
+    };
+</script>
 
-            if (username && password && captchaPassed) {
-                submitButton.disabled = false;
-            } else {
-                submitButton.disabled = true;
-            }
-        };
-
-        form.addEventListener("input", checkForm);
-
-        // EZ A FÜGGVÉNY FUT LE, MIUTÁN A GOOGLE API BETÖLTŐDÖTT
-        window.onloadCallback = function() {
-            if (captchaDiv) {
-                 // 1. Manuális CAPTCHA renderelés (explicit mód)
-                 grecaptcha.render(captchaDiv, {
-                    'sitekey' : '6Lchr9krAAAAACDaXx_bL0rKctkogHjRzRi5ITZt', // Stringként megadva
-                    'callback' : checkForm, // Sikeres pipálás után engedélyezi a gombot
-                    'expired-callback' : checkForm // Lejárat esetén letiltja
-                 });
-            }
-
-            // 2. Kezdeti ellenőrzés a DOM betöltése és a CAPTCHA inicializálása után
-            // Ez engedélyezi a gombot, ha nincs CAPTCHA
-            checkForm();
-        };
-
-        // Ezzel biztosítjuk, hogy ha nincs CAPTCHA (azaz a captchaDiv nem látható),
-        // a gomb engedélyezve legyen, amint a felhasználó kitölti a mezőket.
-        // (A checkForm már figyeli az input eseményeket.)
-        // Ha a 'captchaRequired' false, a captchaDiv == null, a captchaPassed alapból 'true'.
-
-    </script>
-
+</body>
+</html>

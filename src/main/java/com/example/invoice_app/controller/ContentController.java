@@ -42,7 +42,6 @@ public class ContentController {
         // A session-beli flag törlése, hogy a következő GET-nél ne maradjon
         session.removeAttribute("captchaRequired");
         session.removeAttribute("errorMessage");
-
         return "login";
     }
 
