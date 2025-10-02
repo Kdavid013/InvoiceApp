@@ -47,7 +47,7 @@
             </div>
             <div class="inputbox">
                 <input type="text" th:field="*{comment}" placeholder="Comment"/>
-                <span th:if="${#fields.hasErrors('product')}"
+                <span th:if="${#fields.hasErrors('comment')}"
                       th:errors="*{product}"
                       class="error-message"
                 ></span>
